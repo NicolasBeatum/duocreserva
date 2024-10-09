@@ -14,7 +14,10 @@ const ComidaModel = db.define('comida', {
     },
     Descripcion: { type: DataTypes.STRING },
     Precio: { type: DataTypes.INTEGER }
-});
+},{
+    timestamps: false
+}
+);
 
 // Definición de la relación
 ComidaModel.belongsTo(TipoComidaModel, { foreignKey: 'ID_TipoComida' });
