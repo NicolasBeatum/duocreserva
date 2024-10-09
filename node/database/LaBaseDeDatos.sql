@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `reservaalmuerzos` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `reservaalmuerzos`;
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: reservaalmuerzos
+-- Host: localhost    Database: reservaalmuerzos
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.0.39
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -36,7 +36,7 @@ CREATE TABLE `almuerzo` (
   KEY `ID_Postre` (`ID_Postre`),
   KEY `ID_Jugo` (`ID_Jugo`),
   KEY `ID_Ensalada` (`ID_Ensalada`),
-  CONSTRAINT `almuerzo_ibfk_1` FOREIGN KEY (`ID_Comida`) REFERENCES `comida` (`ID_Comida`),
+  CONSTRAINT `almuerzo_ibfk_1` FOREIGN KEY (`ID_Comida`) REFERENCES `comidas` (`ID_Comida`),
   CONSTRAINT `almuerzo_ibfk_2` FOREIGN KEY (`ID_Postre`) REFERENCES `postre` (`ID_Postre`),
   CONSTRAINT `almuerzo_ibfk_3` FOREIGN KEY (`ID_Jugo`) REFERENCES `jugo` (`ID_Jugo`),
   CONSTRAINT `almuerzo_ibfk_4` FOREIGN KEY (`ID_Ensalada`) REFERENCES `ensalada` (`ID_Ensalada`)
@@ -53,13 +53,13 @@ LOCK TABLES `almuerzo` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `comida`
+-- Table structure for table `comidas`
 --
 
-DROP TABLE IF EXISTS `comida`;
+DROP TABLE IF EXISTS `comidas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `comida` (
+CREATE TABLE `comidas` (
   `ID_Comida` int NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(100) NOT NULL,
   `ID_TipoComida` int DEFAULT NULL,
@@ -67,18 +67,18 @@ CREATE TABLE `comida` (
   `Precio` int DEFAULT NULL,
   PRIMARY KEY (`ID_Comida`),
   KEY `ID_TipoComida` (`ID_TipoComida`),
-  CONSTRAINT `comida_ibfk_1` FOREIGN KEY (`ID_TipoComida`) REFERENCES `tipocomida` (`ID_TipoComida`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `comidas_ibfk_1` FOREIGN KEY (`ID_TipoComida`) REFERENCES `tipocomida` (`ID_TipoComida`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `comida`
+-- Dumping data for table `comidas`
 --
 
-LOCK TABLES `comida` WRITE;
-/*!40000 ALTER TABLE `comida` DISABLE KEYS */;
-INSERT INTO `comida` VALUES (1,'Pollo Asado con Puré de Papas',1,'Pechuga de pollo marinada y asada acompañada de puré de papas cremoso.',4500),(2,'Ensalada César con Pollo',1,'Ensalada clásica con lechuga romana, crutones, queso parmesano y pollo a la plancha.',5200),(3,'Pastel de Choclo',1,'Base de carne y pollo con cebolla, cubierto con crema de choclo y horneado.',6900);
-/*!40000 ALTER TABLE `comida` ENABLE KEYS */;
+LOCK TABLES `comidas` WRITE;
+/*!40000 ALTER TABLE `comidas` DISABLE KEYS */;
+INSERT INTO `comidas` VALUES (1,'Pollo Asado con Puré de Papas',1,'Pechuga de pollo marinada y asada acompañada de puré de papas cremoso.',4500),(2,'Ensalada César con Pollo',1,'Ensalada clásica con lechuga romana, crutones, queso parmesano y pollo a la plancha.',5200),(3,'Pastel de Choclo',1,'Base de carne y pollo con cebolla, cubierto con crema de choclo y horneado.',6900),(4,'Papas Fritas con Carne Vacuno',1,'Papas Fritas Caliente con Trozos de Carne de Vacuno',5600);
+/*!40000 ALTER TABLE `comidas` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -306,4 +306,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-01 10:08:36
+-- Dump completed on 2024-10-09 13:43:40
