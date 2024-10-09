@@ -1,5 +1,6 @@
 import ComidaModel from '../models/ComidaModel.js';
-//mostrar todas las comidas
+
+// Mostrar todas las comidas
 export const getAllComidas = async (req, res) => {
     try {
         const comidas = await ComidaModel.findAll();
@@ -9,10 +10,10 @@ export const getAllComidas = async (req, res) => {
     }
 };
 
-//mostrar una comida
+// Mostrar una comida
 export const getComida = async (req, res) => {
     try {
-        const comida = comida.findAll({
+        const comida = await ComidaModel.findOne({
             where: {
                 ID_Comida: req.params.ID_Comida
             }
@@ -23,7 +24,7 @@ export const getComida = async (req, res) => {
     }
 }
 
-//crear una comida
+// Crear una comida
 export const createComida = async (req, res) => {
     try {
         await ComidaModel.create(req.body); 
@@ -33,10 +34,10 @@ export const createComida = async (req, res) => {
     }
 }
 
-//actualizar una comida
+// Actualizar una comida
 export const updateComida = async (req, res) => {
     try {
-       ComidaModel.updateComida(req.body, {
+        await ComidaModel.update(req.body, {
             where: {
                 ID_Comida: req.params.ID_Comida
             }
@@ -47,10 +48,10 @@ export const updateComida = async (req, res) => {
     }
 }
 
-//eliminar una comida
+// Eliminar una comida
 export const deleteComida = async (req, res) => {
     try {
-        ComidaModel.destroy({
+        await ComidaModel.destroy({
             where: {
                 ID_Comida: req.params.ID_Comida
             }
@@ -60,4 +61,3 @@ export const deleteComida = async (req, res) => {
         res.json({ message: error.message });
     }
 }
-
