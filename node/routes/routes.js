@@ -2,6 +2,7 @@ import express from 'express';
 import { getAllComidas, getComida, createComida, updateComida, deleteComida } from '../controllers/ComidaController.js';
 import { getUsuario, getUsuarios,createUsuario, updateUsuario, deleteUsuario } from '../controllers/UsuarioController.js';
 import { getEnsaladas, getEnsalada, createEnsalada, updateEnsalada, deleteEnsalada } from '../controllers/EnsaladaController.js';
+import { getPostres, getPostre, createPostre, updatePostre, deletePostre } from '../controllers/PostreController.js';
 
 const router = express.Router();
 
@@ -25,5 +26,12 @@ router.get('/ensalada/:ID_Ensalada', getEnsalada);
 router.post('/ensalada', createEnsalada);
 router.put('/ensalada/:ID_Ensalada', updateEnsalada);
 router.delete('/ensalada/:ID_Ensalada', deleteEnsalada);
+
+// Rutas para postres
+router.get('/postre', getPostres);
+router.get('/postre/:ID_Postre', getPostre);
+router.post('/postre', createPostre);
+router.put('/postre/:ID_Postre', updatePostre);
+router.delete('/postre/:ID_Postre', deletePostre);
 
 export default router;
