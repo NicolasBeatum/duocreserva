@@ -1,6 +1,7 @@
 import express from 'express';
 import { getAllComidas, getComida, createComida, updateComida, deleteComida } from '../controllers/ComidaController.js';
 import { getUsuario, getUsuarios,createUsuario, updateUsuario, deleteUsuario } from '../controllers/UsuarioController.js';
+import { getEnsaladas, getEnsalada, createEnsalada, updateEnsalada, deleteEnsalada } from '../controllers/EnsaladaController.js';
 
 const router = express.Router();
 
@@ -17,5 +18,12 @@ router.get('/usuario', getUsuarios);
 router.post('/usuario', createUsuario);
 router.put('/usuario/:ID_Usuario', updateUsuario);
 router.delete('/usuario/:ID_Usuario', deleteUsuario);
+
+// Rutas para ensaladas
+router.get('/ensalada', getEnsaladas);
+router.get('/ensalada/:ID_Ensalada', getEnsalada);
+router.post('/ensalada', createEnsalada);
+router.put('/ensalada/:ID_Ensalada', updateEnsalada);
+router.delete('/ensalada/:ID_Ensalada', deleteEnsalada);
 
 export default router;
