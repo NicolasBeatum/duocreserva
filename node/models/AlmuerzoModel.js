@@ -1,9 +1,9 @@
-import db from "../database/db";
+import db from "../database/db.js";
 import { DataTypes } from 'sequelize';
-import ComidaModel from './ComidaModel';
-import PostreModel from './PostreModel';
-import JugoModel from './JugoModel';
-import EnsaladaModel from './EnsaladaModel';
+import ComidaModel from './ComidaModel.js';
+import PostreModel from './PostreModel.js';
+import JugoModel from './JugoModel.js';
+import EnsaladaModel from './EnsaladaModel.js';
 
 const AlmuerzoModel = db.define('almuerzo', {
     ID_Almuerzo: { type: DataTypes.INTEGER, primaryKey: true },
