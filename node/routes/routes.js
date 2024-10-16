@@ -3,7 +3,7 @@ import { getAllComidas, getComida, createComida, updateComida, deleteComida } fr
 import { getUsuario, getUsuarios,createUsuario, updateUsuario, deleteUsuario } from '../controllers/UsuarioController.js';
 import { getEnsaladas, getEnsalada, createEnsalada, updateEnsalada, deleteEnsalada } from '../controllers/EnsaladaController.js';
 import { getPostres, getPostre, createPostre, updatePostre, deletePostre } from '../controllers/PostreController.js';
-import { createPedido } from '../controllers/PedidoController.js';
+import { createPedido, getPedidosByUsuario } from '../controllers/PedidoController.js';
 
 
 const router = express.Router();
@@ -37,5 +37,7 @@ router.put('/postre/:ID_Postre', updatePostre);
 router.delete('/postre/:ID_Postre', deletePostre);
 
 router.post('/pedido',createPedido);
+router.get('/pedido/usuario/:ID_Usuario', getPedidosByUsuario);
+
 
 export default router;
