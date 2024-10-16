@@ -1,8 +1,8 @@
-import db from "../database/db";
+import db from "../database/db.js";
 import { DataTypes } from 'sequelize';
-import UsuarioModel from './UsuarioModel';
-import AlmuerzoModel from './AlmuerzoModel';
-import EstadoPedidoModel from './EstadoPedidoModel';
+import UsuarioModel from './UsuarioModel.js';
+import AlmuerzoModel from './AlmuerzoModel.js';
+import EstadoPedidoModel from './EstadoPedidoModel.js';
 
 const PedidoModel = db.define('pedido', {
     ID_Pedido: { type: DataTypes.INTEGER, primaryKey: true },
@@ -28,6 +28,10 @@ const PedidoModel = db.define('pedido', {
         }
     },
     FechaPedido: { type: DataTypes.DATE }
+
+},{
+    tableName: 'pedido',
+    timestamps: false
 });
 
 // Definición de las relaciones
