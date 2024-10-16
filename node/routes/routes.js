@@ -3,8 +3,8 @@ import { getAllComidas, getComida, createComida, updateComida, deleteComida } fr
 import { getUsuario, getUsuarios,createUsuario, updateUsuario, deleteUsuario } from '../controllers/UsuarioController.js';
 import { getEnsaladas, getEnsalada, createEnsalada, updateEnsalada, deleteEnsalada } from '../controllers/EnsaladaController.js';
 import { getPostres, getPostre, createPostre, updatePostre, deletePostre } from '../controllers/PostreController.js';
-import { createPedido, getPedidosByUsuario } from '../controllers/PedidoController.js';
-
+import { createPedido } from '../controllers/PedidoController.js';
+import { getJugos, getJugo, createJugo, updateJugo, deleteJugo } from '../controllers/JugoController.js';
 
 const router = express.Router();
 
@@ -37,7 +37,12 @@ router.put('/postre/:ID_Postre', updatePostre);
 router.delete('/postre/:ID_Postre', deletePostre);
 
 router.post('/pedido',createPedido);
-router.get('/pedido/usuario/:ID_Usuario', getPedidosByUsuario);
 
+// Rutas para jugos
+router.get('/jugo', getJugos);
+router.get('/jugo/:ID_Jugo', getJugo);
+router.post('/jugo', createJugo);
+router.put('/jugo/:ID_Jugo', updateJugo);
+router.delete('/jugo/:ID_Jugo', deleteJugo);
 
 export default router;
