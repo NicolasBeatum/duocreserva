@@ -6,6 +6,9 @@ const JugoModel = db.define('jugo', {
     Nombre: { type: DataTypes.STRING },
     Descripcion: { type: DataTypes.STRING },
     Precio: { type: DataTypes.INTEGER }
+},{
+    tableName: 'jugo', 
+    timestamps: false
 });
 
 export default JugoModel;
