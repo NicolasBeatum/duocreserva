@@ -1,6 +1,6 @@
-import db from "../database/db";
+import db from "../database/db.js";
 import { DataTypes } from 'sequelize';
-import TipoCuentaModel from './TipoCuentaModel';
+import TipoCuentaModel from './TipoCuentaModel.js';
 
 const UsuarioModel = db.define('usuario', {
     ID_Usuario: { type: DataTypes.INTEGER, primaryKey: true },

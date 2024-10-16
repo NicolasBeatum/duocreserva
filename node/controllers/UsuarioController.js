@@ -13,3 +13,13 @@ export const getUsuario = async (req, res) => {
         res.json({ message: error.message });
     }
 }
+
+// Mostrar todos los usuarios
+export const getUsuarios = async (req, res) => {
+    try {
+        const usuarios = await UsuarioModel.findAll();
+        res.json(usuarios);
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+}
