@@ -16,6 +16,9 @@ const UsuarioModel = db.define('usuario', {
         }
     },
     Telefono: { type: DataTypes.STRING }
+},{
+    tableName: 'usuario', //Verificar
+    timestamps: false //Obligatorio para que no cree las columnas de createdAt y updatedAt
 });
 
 // Definición de la relación
