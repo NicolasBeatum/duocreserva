@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import VisualizarMenu from './visualizarMenu.js';
 import LoginForm from './test/loginView.js';
-import logo from './images/logo.png'
+import logo from './images/logoDuocReserva.png'
 import LocalLunchReservation from './test/posiblemenu.js';
 
 function App() {
