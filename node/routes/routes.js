@@ -1,10 +1,9 @@
 import express from 'express';
 import { getAllComidas, getComida, createComida, updateComida, deleteComida } from '../controllers/ComidaController.js';
-import { getUsuario, getUsuarios,createUsuario, updateUsuario, deleteUsuario } from '../controllers/UsuarioController.js';
+import { getUsuario, getUsuarios, createUsuario, updateUsuario, deleteUsuario, loginUsuario } from '../controllers/UsuarioController.js';
 import { getEnsaladas, getEnsalada, createEnsalada, updateEnsalada, deleteEnsalada } from '../controllers/EnsaladaController.js';
 import { getPostres, getPostre, createPostre, updatePostre, deletePostre } from '../controllers/PostreController.js';
 import { createPedido } from '../controllers/PedidoController.js';
-
 
 const router = express.Router();
 
@@ -18,7 +17,8 @@ router.delete('/comidas/:ID_Comida', deleteComida);
 // Rutas para usuarios
 router.get('/usuario/:ID_Usuario', getUsuario);
 router.get('/usuario', getUsuarios);
-router.post('/usuario', createUsuario);
+router.post('/usuario', createUsuario); // Ruta para registrar usuario
+router.post('/login', loginUsuario); // Ruta para login
 router.put('/usuario/:ID_Usuario', updateUsuario);
 router.delete('/usuario/:ID_Usuario', deleteUsuario);
 
@@ -36,6 +36,6 @@ router.post('/postre', createPostre);
 router.put('/postre/:ID_Postre', updatePostre);
 router.delete('/postre/:ID_Postre', deletePostre);
 
-router.post('/pedido',createPedido);
+router.post('/pedido', createPedido);
 
 export default router;

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal } from 'bootstrap';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [modalInstance, setModalInstance] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const modalElement = document.getElementById('registerModal');
@@ -23,9 +26,20 @@ const LoginForm = () => {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Inicio de sesión con:', email, password);
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', {
+        Email: email,
+        Contraseña: password
+      });
+      alert(response.data.message);
+      if (response.data.usuario) {
+        navigate('/visualizar-menu');
+      }
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   const openModal = () => {
@@ -95,11 +109,26 @@ const RegisterModal = ({ show, onHide }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const fullEmail = emailDomain === 'custom' ? email : `${email}${emailDomain}`;
-    console.log('Registro enviado:', { firstName, lastName, email: fullEmail, password });
-    onHide();
+    if (password !== confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:8000/api/usuario', {
+        PrimerNombre: firstName,
+        ApellidoPaterno: lastName,
+        Email: fullEmail,
+        Contraseña: password,
+        Telefono: '' // Puedes agregar un campo de teléfono si es necesario
+      });
+      alert(response.data.message);
+      onHide();
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   return (

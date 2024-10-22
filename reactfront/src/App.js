@@ -1,23 +1,23 @@
 import './App.css';
-import ComidasTable from './test/ComidasTable';
 import React from 'react';
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import VisualizarMenu from './visualizarMenu.js';
 import LoginForm from './test/loginView.js';
+import logo from './images/logo.png'
+import LocalLunchReservation from './test/posiblemenu.js';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src="/img/logoDuocReserva.png" className="App-logo" alt="logo" />
+        <img src={logo} className="App-logo" alt="logo" />
         <h1>DuocReserva</h1>
+        
       </header>
-      <LoginForm />
-      
       <Router>
         <Routes>
           <Route path="/visualizar-menu" element={<VisualizarMenu />} />
+          <Route path="/" element={<LoginForm />} />
         </Routes>
       </Router>
     </div>
@@ -25,4 +25,3 @@ function App() {
 }
 
 export default App;
-
