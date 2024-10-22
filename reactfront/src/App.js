@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import ComidasTable from './test/ComidasTable';
 import React from 'react';
@@ -7,19 +6,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <button className='btn '>Click me</button>
-          Learn React
-        </a>
+        <img src="/img/logoDuocReserva.png" className="App-logo" alt="logo" />
       </header>
       <ComidasTable />
     </div>
@@ -27,3 +14,4 @@ function App() {
 }
 
 export default App;
+
