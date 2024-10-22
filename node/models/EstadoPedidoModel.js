@@ -5,7 +5,7 @@ const EstadoPedidoModel = db.define('estadopedido', {
     ID_Estado: { type: DataTypes.INTEGER, primaryKey: true },
     Estado: { type: DataTypes.STRING }
 
-}{
+},{
     timestamps: false,
     tableName: 'estadopedido'
 });
