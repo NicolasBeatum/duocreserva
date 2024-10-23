@@ -1,11 +1,21 @@
 import express from 'express';
 import { getAllComidas, getComida, createComida, updateComida, deleteComida } from '../controllers/ComidaController.js';
-import { getUsuario, getUsuarios, createUsuario, updateUsuario, deleteUsuario, loginUsuario } from '../controllers/UsuarioController.js';
+import { getUsuario, getUsuarios, createUsuario, updateUsuario, deleteUsuario, getPerfil, updatePerfil } from '../controllers/UsuarioController.js';
 import { getEnsaladas, getEnsalada, createEnsalada, updateEnsalada, deleteEnsalada } from '../controllers/EnsaladaController.js';
 import { getPostres, getPostre, createPostre, updatePostre, deletePostre } from '../controllers/PostreController.js';
 import { createPedido } from '../controllers/PedidoController.js';
+import { registerUsuario, loginUsuario } from '../controllers/AuthController.js';
+import { authenticateToken } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
+
+// Rutas para autenticación
+router.post('/register', registerUsuario);
+router.post('/login', loginUsuario);
+
+// Rutas para perfil
+router.get('/perfil', authenticateToken, getPerfil);
+router.put('/perfil', authenticateToken, updatePerfil);
 
 // Rutas para comidas
 router.get('/comidas', getAllComidas);
@@ -17,8 +27,7 @@ router.delete('/comidas/:ID_Comida', deleteComida);
 // Rutas para usuarios
 router.get('/usuario/:ID_Usuario', getUsuario);
 router.get('/usuario', getUsuarios);
-router.post('/usuario', createUsuario); // Ruta para registrar usuario
-router.post('/login', loginUsuario); // Ruta para login
+router.post('/usuario', createUsuario);
 router.put('/usuario/:ID_Usuario', updateUsuario);
 router.delete('/usuario/:ID_Usuario', deleteUsuario);
 

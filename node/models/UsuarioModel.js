@@ -6,7 +6,7 @@ const UsuarioModel = db.define('usuario', {
     ID_Usuario: { type: DataTypes.INTEGER, primaryKey: true },
     PrimerNombre: { type: DataTypes.STRING },
     ApellidoPaterno: { type: DataTypes.STRING },
-    Email: { type: DataTypes.STRING },
+    Email: { type: DataTypes.STRING, unique: true },
     Contraseña: { type: DataTypes.STRING },
     ID_TipoCuenta: { 
         type: DataTypes.INTEGER,
@@ -17,11 +17,10 @@ const UsuarioModel = db.define('usuario', {
     },
     Telefono: { type: DataTypes.STRING }
 },{
-    tableName: 'usuario', //Verificar
-    timestamps: false //Obligatorio para que no cree las columnas de createdAt y updatedAt
+    tableName: 'usuario',
+    timestamps: false
 });
 
-// Definición de la relación
 UsuarioModel.belongsTo(TipoCuentaModel, { foreignKey: 'ID_TipoCuenta' });
 
 export default UsuarioModel;

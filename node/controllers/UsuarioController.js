@@ -1,20 +1,7 @@
 import UsuarioModel from '../models/UsuarioModel.js';
+import bcrypt from 'bcrypt';
 
-// Mostrar un usuario
-export const getUsuario = async (req, res) => {
-    try {
-        const usuario = await UsuarioModel.findOne({
-            where: {
-                ID_Usuario: req.params.ID_Usuario
-            }
-        });
-        res.json(usuario);
-    } catch (error) {
-        res.json({ message: error.message });
-    }
-}
-
-// Mostrar todos los usuarios
+// Obtener todos los usuarios
 export const getUsuarios = async (req, res) => {
     try {
         const usuarios = await UsuarioModel.findAll();
@@ -22,67 +9,61 @@ export const getUsuarios = async (req, res) => {
     } catch (error) {
         res.json({ message: error.message });
     }
-}
+};
 
-// Registrar un nuevo usuario
-export const createUsuario = async (req, res) => {
+// Obtener un usuario por ID
+export const getUsuario = async (req, res) => {
     try {
-        const { PrimerNombre, ApellidoPaterno, Email, Contraseña, Telefono } = req.body;
-        const nuevoUsuario = {
-            PrimerNombre,
-            ApellidoPaterno,
-            Email,
-            Contraseña,
-            ID_TipoCuenta: 2, // Tipo de cuenta por defecto
-            Telefono
-        };
-
-        // Crear el usuario en la base de datos
-        await UsuarioModel.create(nuevoUsuario);
-
-        res.json({ message: "Usuario registrado correctamente" });
+        const usuario = await UsuarioModel.findByPk(req.params.ID_Usuario);
+        res.json(usuario);
     } catch (error) {
         res.json({ message: error.message });
     }
 };
 
-// Iniciar sesión
-export const loginUsuario = async (req, res) => {
+// Crear un nuevo usuario
+export const createUsuario = async (req, res) => {
+    const { PrimerNombre, ApellidoPaterno, Email, Contraseña, Telefono } = req.body;
     try {
-        const { Email, Contraseña } = req.body;
+        const hashedPassword = await bcrypt.hash(Contraseña, 10);
+        await UsuarioModel.create({
+            PrimerNombre,
+            ApellidoPaterno,
+            Email,
+            Contraseña: hashedPassword,
+            Telefono
+        });
+        res.json({ message: "¡Usuario creado correctamente!" });
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+};
 
-        // Buscar el usuario por email
-        const usuario = await UsuarioModel.findOne({ where: { Email } });
-
+// Actualizar un usuario por ID
+export const updateUsuario = async (req, res) => {
+    const { PrimerNombre, ApellidoPaterno, Email, Contraseña, Telefono } = req.body;
+    try {
+        const usuario = await UsuarioModel.findByPk(req.params.ID_Usuario);
         if (!usuario) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
 
-        // Verificar la contraseña
-        if (usuario.Contraseña !== Contraseña) {
-            return res.status(401).json({ message: "Contraseña incorrecta" });
+        if (Contraseña) {
+            usuario.Contraseña = await bcrypt.hash(Contraseña, 10);
         }
+        usuario.PrimerNombre = PrimerNombre;
+        usuario.ApellidoPaterno = ApellidoPaterno;
+        usuario.Email = Email;
+        usuario.Telefono = Telefono;
 
-        res.json({ message: "Inicio de sesión exitoso", usuario });
-    } catch (error) {
-        res.json({ message: error.message });
-    }
-}
-// Actualizar un usuario
-export const updateUsuario = async (req, res) => {
-    try {
-        await UsuarioModel.update(req.body, {
-            where: {
-                ID_Usuario: req.params.ID_Usuario
-            }
-        });
+        await usuario.save();
         res.json({ message: "¡Usuario actualizado correctamente!" });
     } catch (error) {
         res.json({ message: error.message });
     }
-}
+};
 
-// Eliminar un usuario
+// Eliminar un usuario por ID
 export const deleteUsuario = async (req, res) => {
     try {
         await UsuarioModel.destroy({
@@ -94,4 +75,40 @@ export const deleteUsuario = async (req, res) => {
     } catch (error) {
         res.json({ message: error.message });
     }
-}
+};
+
+// Obtener perfil del usuario
+export const getPerfil = async (req, res) => {
+    try {
+        const usuario = await UsuarioModel.findByPk(req.user.ID_Usuario, {
+            attributes: ['PrimerNombre', 'ApellidoPaterno', 'Email', 'Telefono']
+        });
+        res.json(usuario);
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+};
+
+// Actualizar perfil del usuario
+export const updatePerfil = async (req, res) => {
+    const { PrimerNombre, ApellidoPaterno, Email, Contraseña, Telefono } = req.body;
+    try {
+        const usuario = await UsuarioModel.findByPk(req.user.ID_Usuario);
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        if (Contraseña) {
+            usuario.Contraseña = await bcrypt.hash(Contraseña, 10);
+        }
+        usuario.PrimerNombre = PrimerNombre;
+        usuario.ApellidoPaterno = ApellidoPaterno;
+        usuario.Email = Email;
+        usuario.Telefono = Telefono;
+
+        await usuario.save();
+        res.json({ message: "Perfil actualizado correctamente" });
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+};

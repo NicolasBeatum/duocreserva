@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
-const LocalLunchReservation = () => {
+const MenuLocal = () => {
   const [comidas, setComidas] = useState([]); // Estado para comidas
   const [postres, setPostres] = useState([]); // Estado para postres
   const [cart, setCart] = useState([]);
@@ -247,4 +247,4 @@ const LocalLunchReservation = () => {
   );
 };
 
-export default LocalLunchReservation;
+export default MenuLocal;
