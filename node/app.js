@@ -2,8 +2,25 @@ import express from "express";
 import cors from "cors";
 import db from "./database/db.js";
 import router from "./routes/routes.js"; // Importa las rutas
+import bodyParser from 'body-parser';
+import comidasRouter from './routes/routes.js'; // Importa la ruta de comidas
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware para parsear el cuerpo de la solicitud
+app.use(bodyParser.json());
+
+// Usa la ruta de comidas
+app.use('/api/comidas', comidasRouter);
+
+// Inicia el servidor
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
+
+
+
 
 app.use(cors());
 app.use(express.json());
