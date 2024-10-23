@@ -1,11 +1,11 @@
 
-import ComidasTable from './test/ComidasTable';
+import LocalLunchReservation from './test/posiblemenu.js';
 
 const VisualizarMenu = () => {
   
   return (
     <div>
-      <ComidasTable />
+      <LocalLunchReservation />
 
     </div>
   );

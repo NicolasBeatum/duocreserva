@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import VisualizarMenu from './visualizarMenu.js';
+//import VisualizarMenu from './visualizarMenu.js';
 import LoginForm from './test/loginView.js';
 import logo from './images/logoDuocReserva.png'
 import LocalLunchReservation from './test/posiblemenu.js';
@@ -16,7 +16,7 @@ function App() {
       </header>
       <Router>
         <Routes>
-          <Route path="/visualizar-menu" element={<VisualizarMenu />} />
+          <Route path="/visualizar-menu" element={<LocalLunchReservation />} />
           <Route path="/" element={<LoginForm />} />
         </Routes>
       </Router>

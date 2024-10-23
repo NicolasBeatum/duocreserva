@@ -1,61 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-// Datos de ejemplo
-const menuItems = [
-  { id: 1, name: "Pollo a la parrilla", price: 12, description: "Con ensalada y papas", category: "Carnes" },
-  { id: 2, name: "Lomo saltado", price: 14, description: "Tradicional plato peruano", category: "Carnes" },
-  { id: 3, name: "Ensalada César", price: 10, description: "Con pollo grillado", category: "Ensaladas" },
-  { id: 4, name: "Ensalada de quinoa", price: 11, description: "Con vegetales y aderezo de limón", category: "Ensaladas" },
-  { id: 5, name: "Pasta Alfredo", price: 13, description: "Con salsa cremosa y parmesano", category: "Pastas" },
-  { id: 6, name: "Lasaña vegetariana", price: 12, description: "Con berenjena y zucchini", category: "Pastas" },
-];
+import axios from 'axios';
 
 const LocalLunchReservation = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [comidas, setComidas] = useState([]); // Estado para comidas
+  const [postres, setPostres] = useState([]); // Estado para postres
   const [cart, setCart] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
-  const [activeCategory, setActiveCategory] = useState("Carnes");
+  const [activeTab, setActiveTab] = useState('comidas'); // Estado para la pestaña activa
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
 
-  const categories = Array.from(new Set(menuItems.map(item => item.category)));
+  // Cargar los datos del menú desde la base de datos
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const comidasResponse = await axios.get('http://localhost:8000/api/comidas');
+        const postresResponse = await axios.get('http://localhost:8000/api/postre');
+        setComidas(comidasResponse.data);
+        setPostres(postresResponse.data);
+      } catch (error) {
+        console.error('Error al cargar el menú:', error);
+      }
+    };
 
-  const filteredItems = menuItems.filter(item => 
-    (item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    item.category === activeCategory
-  );
+    fetchData();
+  }, []);
 
   const addToCart = (item) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(cartItem => cartItem.id === item.id);
+      const existingItem = prevCart.find(cartItem => 
+        (item.ID_Comida && cartItem.ID_Comida === item.ID_Comida) ||
+        (item.ID_Postre && cartItem.ID_Postre === item.ID_Postre)
+      );
+
       if (existingItem) {
         return prevCart.map(cartItem => 
-          cartItem.id === item.id ? {...cartItem, quantity: cartItem.quantity + 1} : cartItem
+          (item.ID_Comida && cartItem.ID_Comida === item.ID_Comida) || 
+          (item.ID_Postre && cartItem.ID_Postre === item.ID_Postre) 
+            ? { ...cartItem, quantity: cartItem.quantity + 1 } 
+            : cartItem
         );
       }
-      return [...prevCart, {...item, quantity: 1}];
+      return [...prevCart, { ...item, quantity: 1 }];
     });
   };
 
   const removeFromCart = (itemId) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(cartItem => cartItem.id === itemId);
-      if (existingItem && existingItem.quantity > 1) {
-        return prevCart.map(cartItem => 
-          cartItem.id === itemId ? {...cartItem, quantity: cartItem.quantity - 1} : cartItem
-        );
+      const existingItem = prevCart.find(cartItem => 
+        (cartItem.ID_Comida && cartItem.ID_Comida === itemId) || 
+        (cartItem.ID_Postre && cartItem.ID_Postre === itemId)
+      );
+
+      if (existingItem) {
+        if (existingItem.quantity > 1) {
+          return prevCart.map(cartItem => 
+            (cartItem.ID_Comida === itemId || cartItem.ID_Postre === itemId) 
+              ? { ...cartItem, quantity: cartItem.quantity - 1 } 
+              : cartItem
+          );
+        } else {
+          return prevCart.filter(cartItem => 
+            !(cartItem.ID_Comida === itemId || cartItem.ID_Postre === itemId)
+          );
+        }
       }
-      return prevCart.filter(cartItem => cartItem.id !== itemId);
+      return prevCart;
     });
   };
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + item.Precio * item.quantity, 0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Reserva enviada", { cart, selectedDate, customerName, customerPhone });
+
+    // Mostrar alerta de reserva realizada
+    alert('¡Reserva realizada con éxito!');
+
     setCart([]);
     setSelectedDate(new Date().toISOString().split('T')[0]);
     setCustomerName("");
@@ -67,62 +91,109 @@ const LocalLunchReservation = () => {
     return new Date(dateString).toLocaleDateString('es-ES', options);
   };
 
+  // Filtrar comidas y postres según el término de búsqueda
+  const filteredComidas = comidas.filter(item => 
+    item.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const filteredPostres = postres.filter(item => 
+    item.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="container-fluid py-5">
       <h1 className="text-center mb-4">Reserva tu almuerzo</h1>
+
+      {/* Campo de búsqueda */}
+      <div className="mb-4">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Buscar..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      {/* Pestañas */}
+      <ul className="nav nav-tabs mb-4">
+        <li className="nav-item">
+          <button 
+            className={`nav-link ${activeTab === 'comidas' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('comidas')}
+          >
+            Comidas
+          </button>
+        </li>
+        <li className="nav-item">
+          <button 
+            className={`nav-link ${activeTab === 'postres' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('postres')}
+          >
+            Postres
+          </button>
+        </li>
+      </ul>
+
       <div className="row">
         <div className="col-md-8">
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Buscar almuerzos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button className="btn btn-outline-secondary" type="button">Buscar</button>
-          </div>
-          <ul className="nav nav-tabs mb-3">
-            {categories.map(category => (
-              <li className="nav-item" key={category}>
-                <button 
-                  className={`nav-link ${activeCategory === category ? 'active' : ''}`}
-                  onClick={() => setActiveCategory(category)}
-                >
-                  {category}
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div className="row row-cols-1 row-cols-md-2 g-4">
-            {filteredItems.map(item => (
-              <div key={item.id} className="col">
-                <div className="card h-100">
-                  <div className="card-body">
-                    <h5 className="card-title">{item.name}</h5>
-                    <p className="card-text">{item.description}</p>
-                    <p className="card-text"><small className="text-muted">${item.price}</small></p>
-                    <button className="btn btn-primary" onClick={() => addToCart(item)}>
-                      Añadir al carrito
-                    </button>
+          {/* Contenido basado en la pestaña activa */}
+          {activeTab === 'comidas' && (
+            <>
+              <h2>Comidas</h2>
+              <div className="row row-cols-1 row-cols-md-2 g-4">
+                {filteredComidas.map(item => (
+                  <div key={item.id} className="col">
+                    <div className="card h-100">
+                      <div className="card-body">
+                        <h5 className="card-title">{item.Nombre}</h5>
+                        <p className="card-text">{item.Descripcion}</p>
+                        <p className="card-text"><small className="text-muted">${item.Precio}</small></p>
+                        <button className="btn btn-warning" onClick={() => addToCart(item)}>
+                          Añadir al carrito
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
+          
+          {activeTab === 'postres' && (
+            <>
+              <h2>Postres</h2>
+              <div className="row row-cols-1 row-cols-md-2 g-4">
+                {filteredPostres.map(item => (
+                  <div key={item.id} className="col">
+                    <div className="card h-100">
+                      <div className="card-body">
+                        <h5 className="card-title">{item.Nombre}</h5>
+                        <p className="card-text">{item.Descripcion}</p>
+                        <p className="card-text"><small className="text-muted">${item.Precio}</small></p>
+                        <button className="btn btn-warning" onClick={() => addToCart(item)}>
+                          Añadir al carrito
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
+
         <div className="col-md-4">
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Tu pedido</h5>
               {cart.map(item => (
-                <div key={item.id} className="d-flex justify-content-between align-items-center mb-2">
+                <div key={item.ID_Comida || item.ID_Postre} className="d-flex justify-content-between align-items-center mb-2">
                   <div>
-                    <h6 className="mb-0">{item.name}</h6>
-                    <small className="text-muted">${item.price} x {item.quantity}</small>
+                    <h6 className="mb-0">{item.Nombre}</h6>
+                    <small className="text-muted">${item.Precio} x {item.quantity}</small>
                   </div>
                   <div>
-                    <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => removeFromCart(item.id)}>-</button>
+                    <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => removeFromCart(item.ID_Comida || item.ID_Postre)}>-</button>
                     <span>{item.quantity}</span>
                     <button className="btn btn-sm btn-outline-secondary ms-2" onClick={() => addToCart(item)}>+</button>
                   </div>
@@ -131,7 +202,7 @@ const LocalLunchReservation = () => {
               <hr />
               <div className="d-flex justify-content-between mb-3">
                 <strong>Total:</strong>
-                <strong>${totalPrice.toFixed(2)}</strong>
+                <strong>${totalPrice.toFixed(0)}</strong>
               </div>
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
@@ -143,9 +214,6 @@ const LocalLunchReservation = () => {
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
                   />
-                  <small className="form-text text-muted">
-                    {formatDate(selectedDate)}
-                  </small>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="customer-name" className="form-label">Nombre</label>
@@ -169,9 +237,7 @@ const LocalLunchReservation = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-success w-100">
-                  Reservar almuerzo
-                </button>
+                <button type="submit" className="btn btn-primary">Reservar</button>
               </form>
             </div>
           </div>
