@@ -7,6 +7,9 @@ import MenuLocal from './components/Menu.js';
 import { AuthProvider } from './context/authContext.js';
 import Perfil from './components/Perfil.js';
 import PrivateRoute from './components/privateRoutes.js';
+import AdminView from './components/adminView.js';
+import AdminRoute from './components/AdminRoutes.js'; 
+
 
 function App() {
   return (
@@ -19,6 +22,7 @@ function App() {
             <Route path="/visualizar-menu" element={<MenuLocal />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/perfil" element={<PrivateRoute><Perfil /></PrivateRoute>} />
+            <Route path="/admin" element={<AdminRoute><AdminView /></AdminRoute>} />
           </Routes>
         </Router>
       </AuthProvider>

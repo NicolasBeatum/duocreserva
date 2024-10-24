@@ -5,10 +5,10 @@ import logo from '../images/logoDuocReserva.png';
 import AuthContext from '../context/authContext.js';
 import RegisterModal from './RegisterModal';
 import { Modal } from 'bootstrap'; // Importar Modal desde Bootstrap
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { useNavigate, Link } from 'react-router-dom'; // Importar useNavigate y Link
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, userType } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const modalRef = useRef(null);
   const navigate = useNavigate(); // Usar useNavigate para redirección
@@ -32,13 +32,13 @@ const Navbar = () => {
   };
 
   const closeModal = () => {
+    setShowModal(false);
     if (modalRef.current) {
       const modal = Modal.getInstance(modalRef.current);
       if (modal) {
         modal.hide();
       }
     }
-    setShowModal(false);
   };
 
   const handleLogout = () => {
@@ -68,9 +68,15 @@ const Navbar = () => {
           <ul className="navbar-nav">
             {isAuthenticated ? (
               <>
+                              {userType === 1 && (
+                  <li className="nav-item">
+                    <Link to="/admin" className="nav-link btn">Admin Panel</Link>
+                  </li>
+                )}
                 <li className="nav-item">
                   <a className="nav-link" href="/perfil">Gestionar mi perfil</a>
                 </li>
+
                 <li className="nav-item">
                   <button className="nav-link btn" onClick={handleLogout}>Cerrar sesión</button>
                 </li>
