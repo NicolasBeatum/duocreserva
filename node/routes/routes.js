@@ -6,6 +6,7 @@ import { getPostres, getPostre, createPostre, updatePostre, deletePostre } from 
 import { createPedido } from '../controllers/PedidoController.js';
 import { registerUsuario, loginUsuario } from '../controllers/AuthController.js';
 import { authenticateToken } from '../middlewares/authMiddleware.js';
+import { createJugo, deleteJugo, getJugo, getJugos, updateJugo } from '../controllers/JugoController.js';
 
 const router = express.Router();
 
@@ -44,6 +45,13 @@ router.get('/postre/:ID_Postre', getPostre);
 router.post('/postre', createPostre);
 router.put('/postre/:ID_Postre', updatePostre);
 router.delete('/postre/:ID_Postre', deletePostre);
+
+// Rutas para jugos
+router.get('/jugo', getJugos);
+router.get('/jugo/:ID_Jugo', getJugo);
+router.post('/jugo', createJugo);
+router.put('/jugo/:ID_Jugo', updateJugo);
+router.delete('/jugo/:ID_Jugo', deleteJugo);
 
 router.post('/pedido', createPedido);
 

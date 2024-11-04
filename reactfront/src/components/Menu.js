@@ -6,6 +6,7 @@ const MenuLocal = () => {
   const [comidas, setComidas] = useState([]); // Estado para comidas
   const [postres, setPostres] = useState([]); // Estado para postres
   const [ensaladas, setEnsaladas] = useState([]); // Estado para ensaladas
+  const [jugos, setJugos] = useState([]); // Estado para los jugos
   const [cart, setCart] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [customerName, setCustomerName] = useState("");
@@ -17,38 +18,37 @@ const MenuLocal = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const comidasResponse = await axios.get('http://localhost:8000/api/comidas');
-        const postresResponse = await axios.get('http://localhost:8000/api/postre');
-        const ensaladasResponse = await axios.get('http://localhost:8000/api/ensalada');
-        setComidas(comidasResponse.data);
-        setPostres(postresResponse.data);
-        setEnsaladas(ensaladasResponse.data);
+         const [comidasResponse, postresResponse, ensaladasResponse, jugosResponse] = await Promise.all([
+            axios.get('http://localhost:8000/api/comidas'),
+            axios.get('http://localhost:8000/api/postre'),
+            axios.get('http://localhost:8000/api/ensalada'),
+            axios.get('http://localhost:8000/api/jugo'),
+         ]);
+         setComidas(comidasResponse.data);
+         setPostres(postresResponse.data);
+         setEnsaladas(ensaladasResponse.data);
+         setJugos(jugosResponse.data);
       } catch (error) {
-        console.error('Error al cargar el menú:', error);
+         console.error('Error al cargar el menú:', error);
+         alert('Ocurrió un error al cargar el menú. Por favor, intente nuevamente más tarde.');
       }
-    };
+   };
 
     fetchData();
   }, []);
 
   const addToCart = (item) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(cartItem => 
-        (item.ID_Comida && cartItem.ID_Comida === item.ID_Comida) ||
-        (item.ID_Postre && cartItem.ID_Postre === item.ID_Postre) ||
-        (item.ID_Ensalada && cartItem.ID_Ensalada === item.ID_Ensalada)
+      // Filtra el carrito para eliminar cualquier elemento de la misma categoría
+      const updatedCart = prevCart.filter(cartItem => 
+        !(item.ID_Comida && cartItem.ID_Comida) &&
+        !(item.ID_Postre && cartItem.ID_Postre) &&
+        !(item.ID_Ensalada && cartItem.ID_Ensalada) &&
+        !(item.ID_Jugo && cartItem.ID_Jugo)
       );
 
-      if (existingItem) {
-        return prevCart.map(cartItem => 
-          (item.ID_Comida && cartItem.ID_Comida === item.ID_Comida) || 
-          (item.ID_Postre && cartItem.ID_Postre === item.ID_Postre) ||
-          (item.ID_Ensalada && cartItem.ID_Ensalada === item.ID_Ensalada)
-            ? { ...cartItem, quantity: cartItem.quantity + 1 } 
-            : cartItem
-        );
-      }
-      return [...prevCart, { ...item, quantity: 1 }];
+      // Agrega el nuevo elemento al carrito con la cantidad establecida en 1
+      return [...updatedCart, { ...item, quantity: 1 }];
     });
   };
 
@@ -57,19 +57,20 @@ const MenuLocal = () => {
       const existingItem = prevCart.find(cartItem => 
         (cartItem.ID_Comida && cartItem.ID_Comida === itemId) || 
         (cartItem.ID_Postre && cartItem.ID_Postre === itemId) ||
-        (cartItem.ID_Ensalada && cartItem.ID_Ensalada === itemId)
+        (cartItem.ID_Ensalada && cartItem.ID_Ensalada === itemId) ||
+        (cartItem.ID_Jugo && cartItem.ID_Jugo === itemId)
       );
 
       if (existingItem) {
         if (existingItem.quantity > 1) {
           return prevCart.map(cartItem => 
-            (cartItem.ID_Comida === itemId || cartItem.ID_Postre === itemId ||  cartItem.ID_Ensalada === itemId)
+            (cartItem.ID_Comida === itemId || cartItem.ID_Postre === itemId ||  cartItem.ID_Ensalada === itemId || cartItem.ID_Jugo === itemId)
               ? { ...cartItem, quantity: cartItem.quantity - 1 } 
               : cartItem
           );
         } else {
           return prevCart.filter(cartItem => 
-            !(cartItem.ID_Comida === itemId || cartItem.ID_Postre === itemId || cartItem.ID_Ensalada === itemId)
+            !(cartItem.ID_Comida === itemId || cartItem.ID_Postre === itemId || cartItem.ID_Ensalada === itemId || cartItem.ID_Jugo === itemId)
           );
         }
       }
@@ -97,7 +98,7 @@ const MenuLocal = () => {
     return new Date(dateString).toLocaleDateString('es-ES', options);
   };
 
-  // Filtrar comidas y postres según el término de búsqueda
+  // Filtrar comidas, postres, ensaladas y jugos según el término de búsqueda
   const filteredComidas = comidas.filter(item => 
     item.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -105,6 +106,9 @@ const MenuLocal = () => {
     item.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const filteredEnsaladas = ensaladas.filter(item => 
+    item.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const filteredJugos = jugos.filter(item => 
     item.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -147,6 +151,14 @@ const MenuLocal = () => {
             onClick={() => setActiveTab('ensaladas')}
           >
             Ensaladas
+          </button>
+        </li>
+        <li className="nav-item">
+          <button 
+            className={`nav-link ${activeTab === 'jugos' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('jugos')}
+          >
+            Jugos
           </button>
         </li>
       </ul>
@@ -218,6 +230,27 @@ const MenuLocal = () => {
               </div>
             </>
           )}
+          {activeTab === 'jugos' && (
+            <>
+              <h2>Jugos</h2>
+              <div className="row row-cols-1 row-cols-md-2 g-4">
+                {filteredJugos.map(item => (
+                  <div key={item.id} className="col">
+                    <div className="card h-100">
+                      <div className="card-body">
+                        <h5 className="card-title">{item.Nombre}</h5>
+                        <p className="card-text">{item.Descripcion}</p>
+                        <p className="card-text"><small className="text-muted">${item.Precio}</small></p>
+                        <button className="btn btn-warning" onClick={() => addToCart(item)}>
+                          Añadir al carrito
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="col-md-4">
@@ -225,13 +258,13 @@ const MenuLocal = () => {
             <div className="card-body">
               <h5 className="card-title">Tu pedido</h5>
               {cart.map(item => (
-                <div key={item.ID_Comida || item.ID_Postre || item.ID_Ensalada} className="d-flex justify-content-between align-items-center mb-2">
+                <div key={item.ID_Comida || item.ID_Postre || item.ID_Ensalada || item.ID_Jugo} className="d-flex justify-content-between align-items-center mb-2">
                   <div>
                     <h6 className="mb-0">{item.Nombre}</h6>
                     <small className="text-muted">${item.Precio} x {item.quantity}</small>
                   </div>
                   <div>
-                    <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => removeFromCart(item.ID_Comida || item.ID_Postre || item.ID_Ensalada)}>-</button>
+                    <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => removeFromCart(item.ID_Comida || item.ID_Postre || item.ID_Ensalada || item.ID_Jugo)}>-</button>
                     <span>{item.quantity}</span>
                     <button className="btn btn-sm btn-outline-secondary ms-2" onClick={() => addToCart(item)}>+</button>
                   </div>
