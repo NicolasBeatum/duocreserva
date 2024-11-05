@@ -264,7 +264,7 @@ const MenuLocal = () => {
                     <small className="text-muted">${item.Precio} x {item.quantity}</small>
                   </div>
                   <div>
-                    <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => removeFromCart(item.ID_Comida || item.ID_Postre || item.ID_Ensalada || item.ID_Jugo)}>Eliminar</button>
+                    <button className="btn btn-sm btn-outline-danger me-2" onClick={() => removeFromCart(item.ID_Comida || item.ID_Postre || item.ID_Ensalada || item.ID_Jugo)}>Eliminar</button>
                   </div>
                 </div>
               ))}
