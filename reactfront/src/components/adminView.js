@@ -6,6 +6,8 @@ import DeleteEnsalada from './DeleteEnsalada.js';
 import DeletePostre from './DeletePostre.js';
 import AddEnsalada from './AddEnsalada.js';
 import AddPostre from './AddPostre.js'
+import AddJugo from './AddJugo.js';
+import DeleteJugo from './DeleteJugo.js';
 
 const AdminView = () => {
     return (
@@ -16,9 +18,11 @@ const AdminView = () => {
             <AddAlmuerzo />
             <AddEnsalada/>
             <AddPostre/>
+            <AddJugo/>
             <DeleteComida /> 
             <DeleteEnsalada/>
             <DeletePostre/>
+            <DeleteJugo/>
         </div>
     );
 };
