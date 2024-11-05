@@ -27,12 +27,13 @@ export const getComida = async (req, res) => {
 // Crear una comida
 export const createComida = async (req, res) => {
     try {
-        await ComidaModel.create(req.body); 
-        res.json({ message: "Comida creada" });
+        const nuevaComida = await ComidaModel.create(req.body); 
+        res.status(201).json({ message: "Comida creada", comida: nuevaComida });
     } catch (error) {
-        res.json({ message: error.message });
+        res.status(400).json({ message: error.message }); // Devuelve un error 400 si la creación falla
     }
 }
+
 
 // Actualizar una comida
 export const updateComida = async (req, res) => {

@@ -3,11 +3,17 @@ import { getAllComidas, getComida, createComida, updateComida, deleteComida } fr
 import { getUsuario, getUsuarios, createUsuario, updateUsuario, deleteUsuario, getPerfil, updatePerfil } from '../controllers/UsuarioController.js';
 import { getEnsaladas, getEnsalada, createEnsalada, updateEnsalada, deleteEnsalada } from '../controllers/EnsaladaController.js';
 import { getPostres, getPostre, createPostre, updatePostre, deletePostre } from '../controllers/PostreController.js';
+import { getIDTiposComida, getNombreTiposComida } from '../controllers/TipoComidaController.js';
 import { createPedido } from '../controllers/PedidoController.js';
 import { registerUsuario, loginUsuario } from '../controllers/AuthController.js';
 import { authenticateToken } from '../middlewares/authMiddleware.js';
 
+
 const router = express.Router();
+
+//Rutas para tipo comida
+router.get('/tipos-comida/ids', getIDTiposComida);
+router.get('/tipos-comida/nombres', getNombreTiposComida);
 
 // Rutas para autenticación
 router.post('/register', registerUsuario);

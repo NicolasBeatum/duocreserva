@@ -168,6 +168,8 @@ const MenuLocal = () => {
                         <button className="btn btn-warning" onClick={() => addToCart(item)}>
                           Añadir al carrito
                         </button>
+                       
+                        
                       </div>
                     </div>
                   </div>
